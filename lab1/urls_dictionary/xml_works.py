@@ -14,7 +14,7 @@ def prettify(elem):
 
 def parse_urls_xml(urls_xml):
     xml_root = parse(urls_xml).getroot()
-    if xml_root.tag != "urls_dictionary":
+    if xml_root.tag != "urls":
         raise Exception("Invalid xml structure.")
     return [url.text for url in xml_root.iter('url')]
 
