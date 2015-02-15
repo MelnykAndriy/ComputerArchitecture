@@ -4,7 +4,7 @@ import argparse
 import ConfigParser
 import sys
 from urls_dictionary.network_tools import set_net_lib
-from urls_dictionary.xml_works import dump_dict, parse_urls_xml
+from urls_dictionary.xml_works import dump_occurrence_dict, parse_urls_xml
 from urls_dictionary.words_analyzes import make_occurrence_dictionary
 from urls_dictionary.urls_processing import ukrainian_words_from_urls
 
@@ -36,7 +36,7 @@ else:
     set_net_lib(config.defaults().get('net_lib'))
 
 
-dump_dict(
+dump_occurrence_dict(
     make_occurrence_dictionary(
         ukrainian_words_from_urls(
             reduce(lambda urls, urls_file: urls + parse_urls_xml(urls_file),

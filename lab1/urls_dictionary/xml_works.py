@@ -19,7 +19,7 @@ def parse_urls_xml(urls_xml):
     return [url.text for url in xml_root.iter('url')]
 
 
-def dump_dict(dict_to_dump, xml_file, needs_to_be_sorted=False):
+def dump_occurrence_dict(dict_to_dump, xml_file, needs_to_be_sorted=False):
     root = ElementTree.Element("occurrence_dictionary")
     words_rep = dict_to_dump.items()
     if needs_to_be_sorted:
@@ -33,3 +33,14 @@ def dump_dict(dict_to_dump, xml_file, needs_to_be_sorted=False):
             word, str(occurrence_number)
     with open(xml_file, "w") as f:
         f.write(prettify(root).encode("utf8"))
+
+
+def read_occurrence_dict(xml_dict):
+    xml_root = parse(xml_dict).getroot()
+    if xml_root.tag != "occurrence_dictionary":
+        raise Exception("Invalid xml structure.")
+    ret_dict = {}
+    for word_record in xml_root.iter('word_record'):
+        ret_dict[word_record.find('word').text] = \
+            int(word_record.find('occurrence_number').text)
+    return ret_dict

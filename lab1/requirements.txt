@@ -2,3 +2,5 @@ List of required packages:
     hunspell (0.3.2),
     gevent (1.0.1),
     greenlet (0.4.5)
+    coverage
+    html2text
