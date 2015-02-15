@@ -19,15 +19,18 @@ def parse_urls_xml(urls_xml):
     return [url.text for url in xml_root.iter('url')]
 
 
-def dump_dict(dict_to_dump, xml_file):
+def dump_dict(dict_to_dump, xml_file, needs_to_be_sorted=False):
     root = ElementTree.Element("occurrence_dictionary")
-    for word, occurrence_number in dict_to_dump.items():
+    words_rep = dict_to_dump.items()
+    if needs_to_be_sorted:
+        words_rep.sort(key=lambda x: x[1], reverse=True)
+    for word, occurrence_number in words_rep:
         word_record = ElementTree.SubElement(root, "word_record")
         word_subelem = ElementTree.SubElement(word_record, "word")
         occurrence_number_subelem = ElementTree.SubElement(word_record, "occurrence_number")
         word_subelem.text, occurrence_number_subelem.text = word, str(occurrence_number)
     f = open(xml_file, "w")
-    f.write(prettify(root))
+    f.write(prettify(root).encode("utf8"))
     f.close()
 
 
