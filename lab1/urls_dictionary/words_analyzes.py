@@ -12,9 +12,9 @@ class Converter:
 
     def __call__(self, word):
 
-        stem_res = map(lambda base_word: unicode(base_word, 'UTF-8'), self.dictionary.stem(word))
+        stem_res = map(lambda base_word: unicode(base_word, 'UTF-8'),
+                       self.dictionary.stem(word))
         if stem_res:
-
             if word in stem_res:
                 return word
             return stem_res[0]
@@ -22,8 +22,9 @@ class Converter:
             return None
 
 try:
-    ukrainian_converter = Converter(hunspell.HunSpell(getenv("LAB1_DICTIONARY_PATH") + '/uk_UA.dic',
-                                                      getenv("LAB1_DICTIONARY_PATH") + '/uk_UA.aff'))
+    ukrainian_converter = Converter(hunspell.HunSpell(
+        getenv("LAB1_DICTIONARY_PATH") + '/uk_UA.dic',
+        getenv("LAB1_DICTIONARY_PATH") + '/uk_UA.aff'))
 except:
     raise Exception("Must supply a path to uk_UA.aff and uk_UA.dic in " +
                     "the environment variable LAB1_DICTIONARY_PATH.")

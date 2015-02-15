@@ -38,9 +38,3 @@ def set_net_lib(libname):
         url_to_tree = gevent_url_to_tree
     else:
         raise Exception('Unresolved library.')
-
-
-
-
-
-
