@@ -1,2 +1,3 @@
 List of required packages:
-    hunspell
+    hunspell (0.3.2),
+    gevent

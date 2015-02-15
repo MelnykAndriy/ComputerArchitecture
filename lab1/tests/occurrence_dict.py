@@ -10,9 +10,9 @@ class DictionaryWorks(unittest.TestCase):
 
     def testDictMaking(self):
         words = []
-        words.extend(['школярем', 'школярі'])
-        words.extend(['директор', 'директору', 'директором', 'директорові'])
-        words.extend(['товаришу'])
+        words.extend([u'школярем', u'школярі'])
+        words.extend([u'директор', u'директору', u'директором', u'директорові'])
+        words.extend([u'товаришу'])
         dictionary = make_occurrence_dictionary(words)
-        self.assertDictEqual(dictionary, {'школяр': 2, 'директор': 4, 'товариш': 1},
+        self.assertDictEqual(dictionary, {u'школяр': 2, u'директор': 4, u'товариш': 1},
                              "Checks whether occurrence dictionary was built properly")

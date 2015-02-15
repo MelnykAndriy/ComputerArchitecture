@@ -1,8 +1,7 @@
 __author__ = 'Andriy'
 
 import re
-from urllib import urlopen
-from xml.etree.ElementTree import parse
+from network_tools import url_to_tree
 
 
 special_ukrainian_letters = (u'\u0490', u'\u0491', u'\u0454', u'\u0456',
@@ -32,13 +31,7 @@ def url_text_pieces(url):
         return reduce(lambda texts, subnode: texts + tree_traverse(subnode),
                       node,
                       filter(lambda text: text is not None, [node.text]))
-
-    url_connection = None
     try:
-        url_connection = urlopen(url)
-        return tree_traverse(parse(url_connection).getroot())
+        return tree_traverse(url_to_tree)
     except:
-        print "Can't process url %s properly."
-    finally:
-        if url_connection:
-            url_connection.close()
+        print "Can't process url %s properly." % url,

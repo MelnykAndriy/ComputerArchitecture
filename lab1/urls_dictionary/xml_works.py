@@ -29,9 +29,9 @@ def dump_dict(dict_to_dump, xml_file, needs_to_be_sorted=False):
         word_subelem = ElementTree.SubElement(word_record, "word")
         occurrence_number_subelem = ElementTree.SubElement(word_record, "occurrence_number")
         word_subelem.text, occurrence_number_subelem.text = word, str(occurrence_number)
-    f = open(xml_file, "w")
-    f.write(prettify(root).encode("utf8"))
-    f.close()
+    with open(xml_file, "w") as f:
+        f.write(prettify(root).encode("utf8"))
+
 
 
 
