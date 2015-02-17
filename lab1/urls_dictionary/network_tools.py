@@ -33,7 +33,6 @@ def gevent_map_urls_sources(url_text_processor, urls):
     pass
 
 
-
 __net_lib__ = 'std'
 
 map_urls_sources = std_map_urls_sources
