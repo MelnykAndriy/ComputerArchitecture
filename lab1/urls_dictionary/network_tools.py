@@ -1,13 +1,14 @@
 __author__ = 'mandriy'
 
-from urllib2 import urlopen
+import urllib2
+from gevent import monkey, joinall, spawn
 
 
 def get_url_text(url):
     connection = None
     try:
-        connection = urlopen(url)
-        return connection.read()
+        connection = urllib2.urlopen(url.encode('cp1251'))
+        return unicode(connection.read(), 'utf8')
     except:
         raise Exception("Can't process url %s properly." % url,)
     finally:
@@ -19,31 +20,52 @@ def protected_map(func, sequence, protector):
     return map(lambda elem: protector(func, elem),
                sequence)
 
+from time import time
+
 
 def std_map_urls_sources(url_text_processor,
                          urls,
                          error_handler=lambda f, *acts: f(*acts)):
-    return protected_map(lambda protected_url:
-                         url_text_processor(get_url_text(protected_url)),
-                         urls,
-                         error_handler)
+    print "std map"
+    start = time()
+    res = protected_map(lambda protected_url:
+                        url_text_processor(get_url_text(protected_url)),
+                        urls,
+                        error_handler)
+    finish = time()
+    print "elapsed time %f" % (finish - start)
+    return res
 
 
-def gevent_map_urls_sources(url_text_processor, urls):
-    pass
+def gevent_map_urls_sources(url_text_processor,
+                            urls,
+                            error_handler=lambda f, *acts: f(*acts)):
+    print "gevent map"
+    start = time()
+    words_getters = [spawn(lambda spwn_url:
+                           error_handler(lambda protected_url:
+                                         url_text_processor(
+                                             get_url_text(protected_url)),
+                                         spwn_url),
+                           url) for url in urls]
+    joinall(words_getters)
+    res = [words_getter.value for words_getter in words_getters]
+    finish = time()
+    print "elapsed time %f" % (finish - start)
+    return res
 
 
 __net_lib__ = 'std'
 
 map_urls_sources = std_map_urls_sources
 
+
 def set_net_lib(libname):
-    global url_to_tree
+    global map_urls_sources
     if libname == 'std':
-        url_to_tree = std_map_urls_sources
+        map_urls_sources = std_map_urls_sources
     elif libname == 'gevent':
-        url_to_tree = gevent_map_urls_sources
+        monkey.patch_all()
+        map_urls_sources = gevent_map_urls_sources
     else:
         raise Exception('Unresolved library.')
-
-

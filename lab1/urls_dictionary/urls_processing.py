@@ -1,8 +1,10 @@
 __author__ = 'Andriy'
 
 import re
-from network_tools import map_urls_sources
+import network_tools
 from HTMLParser import HTMLParser
+
+with_error_ignoring = True
 
 special_ukrainian_letters = (u'\u0490', u'\u0491', u'\u0454', u'\u0456',
                              u'\u0457', u'\u0404', u'\u0406', u'\u0407')
@@ -15,13 +17,17 @@ ukr_letters = [letter for letter in letters
 ukr_letters.extend(special_ukrainian_letters)
 
 
+def ukrainian_word_matcher():
+    regex = u"[%s]+" % reduce(lambda x, y: x+y, ukr_letters)
+    return re.compile(regex, re.UNICODE)
+
+
 class UkrainianWordsCollector(HTMLParser):
 
     def __init__(self):
         HTMLParser.__init__(self)
         self.__words__ = None
-        regex = u"[%s]+" % reduce(lambda x, y: x+y, ukr_letters)
-        self.__spliter__ = re.compile(regex, re.UNICODE)
+        self.__spliter__ = ukrainian_word_matcher()
 
     def collect(self, html_text):
         self.__words__ = []
@@ -33,11 +39,13 @@ class UkrainianWordsCollector(HTMLParser):
         self.__words__.extend(self.__spliter__.findall(data))
 
 
-def error_logger(log_func, log_func_params):
+def error_logger(log_func, *log_func_params):
     try:
         return log_func(*log_func_params)
     except Exception as exc:
         print exc.message
+        if not with_error_ignoring:
+            raise exc
 
 
 def ukrainian_words_from_urls(urls_to_process):
@@ -49,7 +57,7 @@ def ukrainian_words_from_urls(urls_to_process):
                   all_words + url_words,
                   filter(
                       lambda x: x is not None,
-                      map_urls_sources(url_text_processor,
-                                       urls_to_process,
-                                       error_logger)),
+                      network_tools.map_urls_sources(url_text_processor,
+                                                     urls_to_process,
+                                                     error_logger)),
                   [])

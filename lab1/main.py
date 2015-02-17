@@ -7,6 +7,7 @@ from urls_dictionary.network_tools import set_net_lib
 from urls_dictionary.xml_works import dump_occurrence_dict, parse_urls_xml
 from urls_dictionary.words_analyzes import make_occurrence_dictionary
 from urls_dictionary.urls_processing import ukrainian_words_from_urls
+from time import time
 
 args_parser = argparse.ArgumentParser(version='1.0',
                                       add_help=True,
@@ -35,6 +36,7 @@ if config.has_section('Network tools') and \
 else:
     set_net_lib(config.defaults().get('net_lib'))
 
+start = time()
 
 dump_occurrence_dict(
     make_occurrence_dictionary(
@@ -43,3 +45,6 @@ dump_occurrence_dict(
                    parsed_args.urls_files,
                    []))),
     parsed_args.result, True)
+
+finish = time()
+print "elapsed time %f" % (finish - start)
