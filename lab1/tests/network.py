@@ -5,6 +5,11 @@ __author__ = 'mandriy'
 import unittest
 import urls_dictionary.network_tools as network_tools
 import urls_dictionary.urls_processing as urls_processing
+import sys
+if 'threading' in sys.modules:
+    del sys.modules['threading']
+import gevent.monkey
+gevent.monkey.patch_all()
 
 
 class NetworkTests(unittest.TestCase):

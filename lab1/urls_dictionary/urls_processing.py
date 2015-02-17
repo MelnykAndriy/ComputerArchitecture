@@ -4,8 +4,6 @@ import re
 import network_tools
 from HTMLParser import HTMLParser
 
-with_error_ignoring = True
-
 special_ukrainian_letters = (u'\u0490', u'\u0491', u'\u0454', u'\u0456',
                              u'\u0457', u'\u0404', u'\u0406', u'\u0407')
 special_russian_letters = (u'\u044A', u'\u044B', u'\u044D', u'\u0451',
@@ -44,8 +42,6 @@ def error_logger(log_func, *log_func_params):
         return log_func(*log_func_params)
     except Exception as exc:
         print exc.message
-        if not with_error_ignoring:
-            raise exc
 
 
 def ukrainian_words_from_urls(urls_to_process):
