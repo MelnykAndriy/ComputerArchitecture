@@ -29,6 +29,7 @@ configfile = 'lab1.cfg'
 config = ConfigParser.RawConfigParser({'net_lib': 'std'})
 config.read(configfile)
 parsed_args = args_parser.parse_args(sys.argv)
+parsed_args.urls_files.remove('main.py')
 
 if config.has_section('Network tools') and \
         config.has_option('Network tools', 'lib'):
