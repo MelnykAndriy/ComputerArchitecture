@@ -2,6 +2,7 @@ __author__ = 'mandriy'
 
 import urllib2
 from gevent import monkey, joinall, spawn
+from time import time
 
 
 def get_url_text(url):
@@ -19,8 +20,6 @@ def get_url_text(url):
 def protected_map(func, sequence, protector):
     return map(lambda elem: protector(func, elem),
                sequence)
-
-from time import time
 
 
 def std_map_urls_sources(url_text_processor,
