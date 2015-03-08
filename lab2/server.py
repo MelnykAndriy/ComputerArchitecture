@@ -14,4 +14,5 @@ def get_task():
     return template('task')
 
 
-run(host='localhost', port=8080)
+def run_server():
+    run(host='localhost', port=8080)
