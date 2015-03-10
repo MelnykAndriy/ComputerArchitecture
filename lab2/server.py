@@ -1,7 +1,7 @@
 __author__ = 'mandriy'
 
 
-from bottle import route, run, template
+from bottle import route, run, template, static_file
 
 
 @route('/info')
@@ -14,5 +14,10 @@ def get_task():
     return template('task')
 
 
+@route(r'/js/<filename:re:[a-zA-Z0-9]+\.js>')
+def js_getting(filename):
+    return static_file(filename, root='js/')
+
+
 def run_server():
-    run(host='localhost', port=8080)
+    run()
