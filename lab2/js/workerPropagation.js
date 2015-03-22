@@ -2,16 +2,17 @@
  * Created by mandriy on 3/9/15.
  */
 
+importScripts('utils.js');
 
-include('/js/utils.js');
+//include('/js/utils.js');
+//
+//function include(url) {
+//    var script = document.createElement('script');
+//    script.src = url;
+//    document.getElementsByTagName('head')[0].appendChild(script)
+//}
 
-function include(url) {
-    var script = document.createElement('script');
-    script.src = url;
-    document.getElementsByTagName('head')[0].appendChild(script)
-}
-
- var worker
+ var worker;
 
  function propagate() {
     if(typeof(Worker) !== "undefined") {
@@ -23,6 +24,8 @@ function include(url) {
     }
  }
 
- function finishWork() {
-    worker.terminate()
- }
+worker.addEventListener('message', function(e) {
+
+});
+
+worker.postMessage('');
