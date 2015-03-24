@@ -20,8 +20,8 @@ function getNames(text) {
     for (var i in ukrLettersList) {
         l += ukrLettersList[i]
     }
-    var searchRegEx = RegExp("[" + l.toUpperCase() + "][" + l.toLowerCase() + "’]*[" + l.toLowerCase()
-                             + "]\\s[" + l.toUpperCase() + "]\\.\\s?[" + l.toUpperCase() + "]\\.", "g");
+    var searchRegEx = new RegExp("[" + l.toUpperCase() + "][" + l.toLowerCase() + "’]*[" + l.toLowerCase()
+                                 + "]\\s[" + l.toUpperCase() + "]\\.\\s?[" + l.toUpperCase() + "]\\.", "g");
     return text.match(searchRegEx)
 }
 

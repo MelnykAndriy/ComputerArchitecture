@@ -4,32 +4,73 @@
 
 importScripts('utils.js');
 
-function sendResultAsJSON(result) {
+function sendResultAsJSON(task_id, result) {
     var request = createRequest();
-    request.open('POST', '/result', true);
-    var json_obj = { result: result };
+    request.open('POST', '/save-result', true);
+    var json_obj = { "task_id" : task_id,
+                     "result" : result };
     request.send(JSON.stringify(json_obj))
 }
 
+function rollbackTask(task_id) {
+    var rollbackRequest = createRequest();
+    rollbackRequest.open('GET', '/task-rollback/' + task_id,true);
+    rollbackRequest.send()
+}
+
+function acceptReceiving(task_id) {
+    var acceptRequest = createRequest();
+    acceptRequest.open('GET', '/accept-receiving/' + task_id,true);
+    acceptRequest.send()
+}
+
+var current_task_id = false;
+
 function workCycle() {
     var request = createRequest();
-    var result = false;
+    var result = null;
+    var processedSuccessfully = false;
+    var whetherShouldStop = false;
     request.onreadystatechange = function () {
-        if (request.readyState == 4 && request.status == 200) {
-            result = getNames(request.responseText)
+        try {
+            if (request.readyState == 4 && request.status == 200) {
+                var task = JSON.parse(request.responseText);
+                current_task_id = task.task_id;
+                if (current_task_id > 0) {
+                    acceptReceiving(current_task_id);
+                    result = getNames(task.text);
+                    processedSuccessfully = true;
+                } else {
+                    whetherShouldStop = true;
+                    if (current_task_id < 0) {
+                        setTimeout(doWork, 5000)
+                    } else {
+                        self.close()
+                    }
+                }
+            }
+        } catch (err) {
+            if (current_task_id)
+                rollbackTask(current_task_id)
         }
     };
-    request.open('GET', '/get-text', false);
+    request.open('GET', '/get-task', false);
     request.send();
-    if (result) {
-        sendResultAsJSON(result)
+    if (processedSuccessfully) {
+        sendResultAsJSON(current_task_id, result);
+        current_task_id = false;
     }
+    return whetherShouldStop;
 }
 
 function doWork(e) {
-    for (var i = 0; i < 3; i++ ) {
-        workCycle()
-    }
+    while(!workCycle()) { }
 }
 
 self.addEventListener('message', doWork);
+self.terminateWorker = function() {
+    if (current_task_id) {
+        rollbackTask(current_task_id);
+    }
+    self.close()
+};

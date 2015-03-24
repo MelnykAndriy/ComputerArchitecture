@@ -2,9 +2,17 @@ __author__ = 'mandriy'
 # -*- coding: utf-8 -*-
 
 from bottle import post, route, run, template, static_file, request
-from tasks_managment.task_manager import TextTaskSystem
+from tasks_managment.task_manager import TextTaskStack, EmptyTaskStack
+import json
+from xml.etree import ElementTree
+from xml.dom import minidom
 
-tasks_manager = TextTaskSystem()
+tasks_manager = TextTaskStack()
+
+
+@route('/')
+def index():
+    return template('index')
 
 
 @route('/info')
@@ -19,21 +27,27 @@ def get_task():
 
 @route('/get-task')
 def task_getting():
-    json = '{ "task_id" : %d, "text" : "%s" }' % tasks_manager.get_task()
-    return json
+    try:
+        # TODO as XML
+        task_id, text = tasks_manager.get_task()
+        task_json = '{ "task_id" : %d, "text" : "%s" }' % (task_id, text.replace('"', r'\"'))
+    except EmptyTaskStack:
+        if tasks_manager.work_is_done():
+            task_json = '{ "task_id": 0, "text": "" }'
+        else:
+            task_json = '{ "task_id": -1, "text": ""}'
+    return task_json
 
-
-@post('/result')
+@post('/save-result')
 def save_result():
-    result_json = request.body.read()
-    task_id = 0  # TODO
-    result = []  # TODO
-    tasks_manager.submit_task(task_id, result)
+    result_json = json.loads(request.body.read())
+    print "submit task with id %d" % (result_json["task_id"],)
+    tasks_manager.submit_task(result_json["task_id"], result_json["result"])
 
 
-@route('/task-rollback')
-def task_rollback():
-    task_id = 0  # TODO
+@route('/task-rollback/<task_id:int>')
+def task_rollback(task_id):
+    print "in rollback %d" % (task_id,)
     tasks_manager.rollback_task(task_id)
 
 
@@ -42,35 +56,33 @@ def js_getting(filename):
     return static_file(filename, root='js/')
 
 
-iter = 0
-snapshots = [
-{"active": 0,
-"available": 10,
-"done": 0},
-{"active": 3,
-"available": 7,
-"done": 0},
-{"active": 3,
-"available": 6,
-"done": 1},
-{"active": 3,
-"available": 2,
-"done": 5},
-{"active": 2,
-"available": 0,
-"done": 8},
-{"active": 0,
-"available": 0,
-"done": 10}]
-
 @route('/system-snapshot')
 def get_system_snapshot():
-    global iter
-    snapshot = snapshots[iter]
-    iter += 1
+    snapshot = tasks_manager.system_snapshot()
     return '{ "active" : %(active)d,' \
            '  "available" : %(available)d,' \
            '  "done" : %(done)d  }' % snapshot
+
+
+@route('/report')
+def report_page():
+    return template('report')
+
+
+@route('/report-download')
+def produce_result():
+    root = ElementTree.Element("persons")
+    for results in tasks_manager.done_part():
+        for person_name in results:
+            person = ElementTree.SubElement(root, "person")
+            person.text = person_name
+    return minidom.parseString(ElementTree.tostring(root, 'utf-8')).toprettyxml(indent="    ").encode("utf8")
+
+
+@route('/accept-receiving/<task_id:int>')
+def accept_recv(task_id):
+    tasks_manager.accept_task(task_id)
+
 
 def run_server():
     run()

@@ -1,6 +1,6 @@
 
 % rebase('base.tpl', title='Tasks dispatching', headAdds='')
-<script src=js/workerPropagation.js > </script>
+<script src=/js/clusterPropagation.js > </script>
 <div style="text-align:center">
 
     <h3>Thank you for participation.</h3>

@@ -1,6 +1,6 @@
 
 % rebase('base.tpl', title='Processing info')
-<script src=js/infoManagerPropagation.js > </script>
+<script src=/js/infoManagerPropagation.js > </script>
 <script>
     propagateInfoManager()
 </script>

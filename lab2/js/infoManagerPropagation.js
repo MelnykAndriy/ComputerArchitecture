@@ -6,10 +6,9 @@
  var infoManager;
 
  function propagateInfoManager() {
-     alert('in propagate')
     if(typeof(Worker) !== "undefined") {
         if(typeof(infoManager) == "undefined") {
-            infoManager = new Worker("js/infoManager.js")
+            infoManager = new Worker("js/infoManager.js");
             infoManager.addEventListener('message', function(e){
                 var systemSnapshot = e.data;
                 document.getElementById('nodesNumber').textContent = systemSnapshot.nodesNumber;
@@ -17,8 +16,7 @@
                 document.getElementById('done').setAttribute('style', 'width:' + systemSnapshot.donePercentage +'%');
                 document.getElementById('remain').setAttribute('style', 'width:' + systemSnapshot.remainPercentage +'%');
                 document.getElementById('progress').setAttribute('style', 'width:' + systemSnapshot.progressPercentage +'%');
-            }, false)
-            alert('post message')
+            }, false);
             infoManager.postMessage('start');
         }
     } else {

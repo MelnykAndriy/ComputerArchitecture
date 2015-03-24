@@ -38,7 +38,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </head>
-<body>
+<body id="body_id">
+    <input id="bigbutton" type="button" onclick="document.location.replace('/')" value="Home." style="text-align:center"/>
     <div id="base_container">
         <div id="base_content">
             {{!base}}
