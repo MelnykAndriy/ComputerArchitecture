@@ -4,8 +4,10 @@ __author__ = 'mandriy'
 from bottle import post, route, run, template, static_file, request
 from tasks_managment.task_manager import TextTaskStack, EmptyTaskStack
 import json
+import utils
 from xml.etree import ElementTree
 from xml.dom import minidom
+
 
 tasks_manager = TextTaskStack()
 
@@ -26,10 +28,10 @@ def get_task():
 
 
 @route('/get-task')
-def task_getting(translate_dict={ord("\n"): u" ", ord('"'): u" "}):
+def task_getting():
     try:
         task_id, text = tasks_manager.get_task()
-        task_json = '{ "task_id" : %d, "text" : "%s" }' % (task_id, text.translate(translate_dict))
+        task_json = '{ "task_id" : %d, "text" : "%s" }' % (task_id, utils.normalize_text_for_json(text))
     except EmptyTaskStack:
         if tasks_manager.work_is_done():
             task_json = '{ "task_id": 0, "text": "" }'

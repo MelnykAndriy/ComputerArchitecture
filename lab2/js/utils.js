@@ -34,3 +34,4 @@ function createRequest() {
     }
     return xhttp
 }
+

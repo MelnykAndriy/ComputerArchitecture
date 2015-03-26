@@ -32,7 +32,7 @@ function workCycle() {
     var processedSuccessfully = false;
     var whetherShouldStop = false;
     request.onreadystatechange = function () {
-        //try {
+        try {
             if (request.readyState == 4 && request.status == 200) {
                 var task = JSON.parse(request.responseText);
                 current_task_id = task.task_id;
@@ -49,10 +49,10 @@ function workCycle() {
                     }
                 }
             }
-        //} catch (err) {
-        //    if (current_task_id)
-        //        rollbackTask(current_task_id)
-        //}
+        } catch (err) {
+            if (current_task_id)
+                rollbackTask(current_task_id)
+        }
     };
     request.open('GET', '/get-task', false);
     request.send();
@@ -64,10 +64,8 @@ function workCycle() {
 }
 
 function doWork(e) {
-    for (var i = 0; i < 9; i++)
-        workCycle()
-    //while (!workCycle()) {
-    //}
+    while (!workCycle()) {
+    }
 }
 
 self.addEventListener('message', doWork);
