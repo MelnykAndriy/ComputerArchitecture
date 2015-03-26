@@ -18,7 +18,7 @@ def get_files(path):
 
     def read_file(file):
         with open(file, "r") as f:
-            return f.read()
+            return f.read().decode('utf-8')
 
     if exists(path):
         return travers_files(path, read_file)
@@ -29,5 +29,5 @@ def get_files(path):
 def init():
     if os.getenv('LAB2_TASKS'):
         server.tasks_manager.load_tasks(get_files(os.getenv('LAB2_TASKS')))
+        # server.tasks_manager.load_tasks([u'asfasf\n Шевченко Т. Г.', u'Шевченко А. Н.\n asfafa', u'Путин В. В.'])
         print server.tasks_manager.system_snapshot()
-        # server.tasks_manager.load_tasks([u'asfasf Шевченко Т. Г.', u'Шевченко А. Н. asfafa', u'Путин В. В.'   ])

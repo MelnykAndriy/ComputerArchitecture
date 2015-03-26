@@ -3,20 +3,23 @@
  */
 
 
- var worker;
+var worker;
 
- function propagate() {
-     document.getElementById("body_id").setAttribute('onunload', "worker.terminateWorker()");
+function terminateWorker() {
+    if (typeof worker !== 'undefined') {
+        worker.terminate()
+    }
+}
+
+function propagate() {
     if(typeof(Worker) !== "undefined") {
         if(typeof(worker) == "undefined") {
+            document.getElementById("body_id").setAttribute('onunload', "terminateWorker");
             worker = new Worker("js/cluster.js");
-            worker.addEventListener('message', function(e) {
-
-            });
             worker.postMessage('start');
         }
     } else {
         alert("Sorry, web workers are not supported in your browser. Please, check out fro new versions.")
     }
- }
+}
 

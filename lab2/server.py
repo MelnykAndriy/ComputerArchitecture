@@ -26,11 +26,10 @@ def get_task():
 
 
 @route('/get-task')
-def task_getting():
+def task_getting(translate_dict={ord("\n"): u" ", ord('"'): u" "}):
     try:
-        # TODO as XML
         task_id, text = tasks_manager.get_task()
-        task_json = '{ "task_id" : %d, "text" : "%s" }' % (task_id, text.replace('"', r'\"'))
+        task_json = '{ "task_id" : %d, "text" : "%s" }' % (task_id, text.translate(translate_dict))
     except EmptyTaskStack:
         if tasks_manager.work_is_done():
             task_json = '{ "task_id": 0, "text": "" }'
@@ -73,9 +72,10 @@ def report_page():
 def produce_result():
     root = ElementTree.Element("persons")
     for results in tasks_manager.done_part():
-        for person_name in results:
-            person = ElementTree.SubElement(root, "person")
-            person.text = person_name
+        if results:
+                for person_name in results:
+                    person = ElementTree.SubElement(root, "person")
+                    person.text = person_name
     return minidom.parseString(ElementTree.tostring(root, 'utf-8')).toprettyxml(indent="    ").encode("utf8")
 
 

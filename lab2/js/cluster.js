@@ -14,13 +14,13 @@ function sendResultAsJSON(task_id, result) {
 
 function rollbackTask(task_id) {
     var rollbackRequest = createRequest();
-    rollbackRequest.open('GET', '/task-rollback/' + task_id,true);
+    rollbackRequest.open('GET', '/task-rollback/' + task_id, true);
     rollbackRequest.send()
 }
 
 function acceptReceiving(task_id) {
     var acceptRequest = createRequest();
-    acceptRequest.open('GET', '/accept-receiving/' + task_id,true);
+    acceptRequest.open('GET', '/accept-receiving/' + task_id, true);
     acceptRequest.send()
 }
 
@@ -32,7 +32,7 @@ function workCycle() {
     var processedSuccessfully = false;
     var whetherShouldStop = false;
     request.onreadystatechange = function () {
-        try {
+        //try {
             if (request.readyState == 4 && request.status == 200) {
                 var task = JSON.parse(request.responseText);
                 current_task_id = task.task_id;
@@ -49,10 +49,10 @@ function workCycle() {
                     }
                 }
             }
-        } catch (err) {
-            if (current_task_id)
-                rollbackTask(current_task_id)
-        }
+        //} catch (err) {
+        //    if (current_task_id)
+        //        rollbackTask(current_task_id)
+        //}
     };
     request.open('GET', '/get-task', false);
     request.send();
@@ -64,13 +64,10 @@ function workCycle() {
 }
 
 function doWork(e) {
-    while(!workCycle()) { }
+    for (var i = 0; i < 9; i++)
+        workCycle()
+    //while (!workCycle()) {
+    //}
 }
 
 self.addEventListener('message', doWork);
-self.terminateWorker = function() {
-    if (current_task_id) {
-        rollbackTask(current_task_id);
-    }
-    self.close()
-};

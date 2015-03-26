@@ -104,7 +104,7 @@ class TaskStack:
 
     def system_snapshot(self):
         return self.__cover__(lambda: {"active": len(filter(lambda task: not task.is_done_task(),
-                                                            self.__active_tasks__)),
+                                                            self.__active_tasks__.values())),
                                        "available": len(self.__available_tasks__),
                                        "done": len(self.__done_tasks__)})
 
