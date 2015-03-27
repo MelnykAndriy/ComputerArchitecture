@@ -20,7 +20,7 @@ function rollbackTask(task_id) {
 
 function acceptReceiving(task_id) {
     var acceptRequest = createRequest();
-    acceptRequest.open('GET', '/accept-receiving/' + task_id, true);
+    acceptRequest.open('GET', '/accept-receiving/' + task_id, false);
     acceptRequest.send()
 }
 

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>{{title}}</title>
     <style>
-        input#bigbutton {
+        input.bigbutton {
             width:500px;
             background: #3e9cbf; /*the colour of the button*/
             padding: 8px 14px 10px; /*apply some padding inside the button*/
@@ -24,7 +24,7 @@
             border-radius: 10px;
         }
         /***SET THE BUTTON'S HOVER AND FOCUS STATES***/
-        input#bigbutton:hover, input#bigbutton:focus {
+        input.bigbutton:hover, input.bigbutton:focus {
             color:#dfe7ea;
             /*reduce the size of the shadow to give a pushed effect*/
             -webkit-box-shadow: inset 0px 1px 0px #3e9cbf, 0px 2px 0px 0px #205c73, 0px 2px 5px #999;
@@ -39,7 +39,7 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </head>
 <body id="body_id">
-    <input id="bigbutton" type="button" onclick="document.location.replace('/')" value="Home." style="text-align:center"/>
+    <input id='home' class="bigbutton" type="button" onclick="document.location.replace('/')" value="Home." style="text-align:center"/>
     <div id="base_container">
         <div id="base_content">
             {{!base}}
