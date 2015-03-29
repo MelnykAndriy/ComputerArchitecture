@@ -27,13 +27,15 @@ function getSystemSnapshotObject() {
 
 self.addEventListener('message', function(e) {
     var intervalID;
-    intervalID = setInterval(function() {
-        var systemSnapshot = getSystemSnapshotObject();
-        self.postMessage(systemSnapshot);
-        if (systemSnapshot.donePercentage === 100) {
-            clearInterval(intervalID);
-            self.close();
-        }
-    }, 1000);
+    var request_send_snapshot = function () {
+                    var systemSnapshot = getSystemSnapshotObject();
+                    self.postMessage(systemSnapshot);
+                    if (systemSnapshot.donePercentage === 100) {
+                        clearInterval(intervalID);
+                        self.close();
+                    }
+                };
+    request_send_snapshot();
+    intervalID = setInterval(request_send_snapshot, 2000);
 });
 

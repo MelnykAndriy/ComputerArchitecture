@@ -90,5 +90,5 @@ def accept_recv(task_id):
     __tasks_manager__.accept_task(task_id)
 
 
-def run_server():
-    run()
+def run_server(host='localhost'):
+    run(server='paste', host=host)

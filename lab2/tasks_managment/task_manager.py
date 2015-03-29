@@ -103,8 +103,7 @@ class TaskStack:
             self.__mutex__.release()
 
     def system_snapshot(self):
-        return self.__cover__(lambda: {"active": len(filter(lambda task: not task.is_done_task(),
-                                                            self.__active_tasks__.values())),
+        return self.__cover__(lambda: {"active": len(self.__active_tasks__),
                                        "available": len(self.__available_tasks__),
                                        "done": len(self.__done_tasks__)})
 
@@ -156,7 +155,7 @@ class TextTaskStack(TaskStack):
                 raise EmptyTaskStack("There is no available tasks.")
 
     def __submit_task__(self, task_id, result):
-        if task_id in self.__active_tasks__.keys():
+        if task_id in self.__active_tasks__:
             if not self.__active_tasks__[task_id].is_done_task():
                 self.__active_tasks__[task_id].mark_as_done()
                 self.__done_tasks__[task_id] = DoneTask(self.__active_tasks__[task_id],
@@ -166,7 +165,7 @@ class TextTaskStack(TaskStack):
             raise TaskIdError("Trying to submit result of task which is inactive.", task_id)
 
     def __rollback_task__(self, task_id):
-        if task_id in self.__active_tasks__.keys():
+        if task_id in self.__active_tasks__:
             rollback_task = self.__active_tasks__[task_id]
             rollback_task.release_node()
             if rollback_task.no_active_nodes():
@@ -177,7 +176,7 @@ class TextTaskStack(TaskStack):
             raise TaskIdError("Trying to rollback inactive task.", task_id)
 
     def __accept_task__(self, task_id):
-        if task_id in self.__active_tasks__.keys():
+        if task_id in self.__active_tasks__:
             self.__active_tasks__[task_id].lock_node()
         else:
             raise TaskIdError("Trying to accept inactive task.", task_id)

@@ -38,6 +38,7 @@ function workCycle() {
                 current_task_id = task.task_id;
                 if (current_task_id > 0) {
                     acceptReceiving(current_task_id);
+                    self.postMessage(String(current_task_id));
                     result = getNames(task.text);
                     processedSuccessfully = true;
                 } else {
@@ -58,6 +59,7 @@ function workCycle() {
     request.send();
     if (processedSuccessfully) {
         sendResultAsJSON(current_task_id, result);
+        self.postMessage('done');
         current_task_id = false;
     }
     return whetherShouldStop;
