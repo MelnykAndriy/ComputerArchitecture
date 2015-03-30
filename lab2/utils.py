@@ -8,11 +8,20 @@ from os.path import isdir, exists, join
 
 
 def set_server_root(path):
+    """
+    Sets server root for template's and javascript's files resolving.
+    :param path: path to server root
+    """
     sys.path.append(os.path.dirname(os.path.abspath(path)))
     os.chdir(os.path.dirname(path))
 
 
 def get_files(path):
+    """
+    Traverses provided path and collects all found files and then read it.
+    :param path: path to file or directory
+    :return: list of file strings from found files
+    """
     def travers_files(p, func):
         if isdir(p):
             return reduce(lambda files, file_or_dir:
@@ -45,4 +54,8 @@ for i in xrange(32):
 
 
 def normalize_text_for_json(text):
+    """
+    :param text: text for json
+    :return: text normalized according to the JSON rules
+    """
     return text.translate(normalized_dict)
