@@ -1,3 +1,4 @@
 List of required packages:
     bottle (0.12.8)
     mock (1.0.1)
+    PySimpleSOAP (1.16)
