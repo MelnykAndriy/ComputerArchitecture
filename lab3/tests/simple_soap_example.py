@@ -21,7 +21,7 @@ class SoapExample(unittest.TestCase):
                 'example',
                 location="http://localhost:8008/",
                 action='http://localhost:8008/',  # SOAPAction
-                namespace="http://example.com/sample.wsdl",
+                namespace="math",
                 prefix="ns0",
                 trace=False,
                 ns=True)
@@ -49,8 +49,7 @@ class SoapExample(unittest.TestCase):
         client = SoapClient(
             location="http://localhost:8008/",
             action='http://localhost:8008/',  # SOAPAction
-            namespace="http://example.com/sample.wsdl",
-            soap_ns='soap',
+            namespace="math",
             trace=False,
             ns=False
         )
