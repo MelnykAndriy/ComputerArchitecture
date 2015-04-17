@@ -2,8 +2,10 @@ __author__ = 'mandriy'
 
 import argparse
 import sys
-import threading
-
+import multiprocessing
+import soap_couchDB_iface.service as soap_service
+import rest_couchDB_iface.server as rest_server
+import signal
 
 args_parser = argparse.ArgumentParser(version='1.0',
                                       add_help=True,
@@ -14,18 +16,31 @@ args_parser.add_argument('-s', '--soap',
                          action='store_true',
                          dest='soap',
                          help='Starts a soap service.')
+
 args_parser.add_argument('-r', '--rest',
                          action='store_true',
                          dest='rest',
                          help='Starts a rest server.')
 
-args = args_parser.parse_args(sys.argv)
+args = args_parser.parse_args(sys.argv[1:])
 
-soap_thread = threading.Thread(target=lambda: args.soap and None)
-rest_thread = threading.Thread(target=lambda: args.rest and None)
+soap_thread = multiprocessing.Process(target=lambda: args.soap and soap_service.start_soap_service())
+rest_thread = multiprocessing.Process(target=lambda: args.rest and rest_server.run_rest_server())
 
 soap_thread.start()
 rest_thread.start()
 
-soap_thread.join()
-rest_thread.join()
+print '\nProgrammers couchdb accessor welcomes you.'
+print 'Press Ctrl+C to stop hosting.'
+
+
+def sigint_handler(*_):
+    if soap_thread.is_alive():
+        soap_thread.terminate()
+    if rest_thread.is_alive():
+        rest_thread.terminate()
+
+signal.signal(signal.SIGINT, sigint_handler)
+signal.pause()
+
+
