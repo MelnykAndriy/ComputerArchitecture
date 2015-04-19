@@ -36,7 +36,6 @@ def read_programmer(programmer_id):
         return _programmers_db[programmer_id]
 
 
-
 @make_thread_safe('programmers')
 def delete_programmer(programmer_id):
     print 'in delete_programmer : %s\n\n' % programmer_id,

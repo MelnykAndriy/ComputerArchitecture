@@ -1,5 +1,9 @@
 List of required packages:
     bottle (0.12.8)
-    mock (1.0.1)
-    PySimpleSOAP (1.16)
     CouchDB (1.0)
+    lxml (3.4.3)
+    mock (1.0.1)
+    Paste (1.7.5.1)
+    spyne (2.11.0)
+    suds (0.4)
+    pytz (2015.2)
