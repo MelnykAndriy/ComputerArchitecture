@@ -38,7 +38,6 @@ def read_programmer(programmer_id):
 
 @make_thread_safe('programmers')
 def delete_programmer(programmer_id):
-    print 'in delete_programmer : %s\n\n' % programmer_id,
     if programmer_id in _programmers_db:
         _programmers_db.delete(_programmers_db[programmer_id])
         return True

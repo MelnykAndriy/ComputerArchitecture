@@ -13,21 +13,22 @@ class ProgrammersAccessService(ServiceBase):
 
     @rpc(Programmer, _returns=String)
     def create_programmer(self, programmer):
-        print programmer
-        print programmer.as_dict()
-        programmer_dict = programmer.as_dict()
-        return programmers_db.create_programmer(**programmer_dict)
+            if programmer:
+                programmer_dict = programmer.as_dict()
+                return programmers_db.create_programmer(**programmer_dict)
 
     @rpc(String, Programmer, _returns=String)
     def create_programmer_with_id(self, programmer_id, programmer):
-        programmer_with_id = {"_id": programmer_id}
-        programmer_with_id.update(programmer.as_dict())
-        return programmers_db.create_programmer(**programmer_with_id)
+        if programmer:
+            programmer_with_id = {"_id": programmer_id}
+            programmer_with_id.update(programmer.as_dict())
+            return programmers_db.create_programmer(**programmer_with_id)
 
     @rpc(String, Programmer, _returns=Boolean)
     def update_programmer(self, update_id, updates):
-        updates = {field: new_val for field, new_val in updates.as_dict().items() if new_val}
-        return programmers_db.update_programmer(update_id, **updates)
+        if updates:
+            updates = {field: new_val for field, new_val in updates.as_dict().items() if new_val}
+            return programmers_db.update_programmer(update_id, **updates)
 
     @rpc(String, _returns=Boolean)
     def delete_programmer(self, programmer_id):

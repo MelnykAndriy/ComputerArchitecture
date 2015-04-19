@@ -19,7 +19,8 @@ _programmer_translate_dict = {
     'skill': str,
     'age': int,
     'experience': int,
-    'languages': list_from_string_array
+    'languages': list_from_string_array,
+    'english_level': str
 }
 
 

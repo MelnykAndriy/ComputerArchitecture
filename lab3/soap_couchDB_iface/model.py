@@ -15,3 +15,6 @@ class Programmer(ComplexModel):
     languages = Array(String)
     experience = UnsignedInt
     skill = String(values=['junior', 'middle', 'senior'])
+    english_level = String(values=['beginner', 'elementary',
+                                   'pre-intermediate', 'intermediate',
+                                   'upper-intermediate', 'advanced', 'proficient'])
