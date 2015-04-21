@@ -24,7 +24,7 @@ args_parser.add_argument('-r', '--rest',
 
 args = args_parser.parse_args(sys.argv[1:])
 
-soap_thread = multiprocessing.Process(target=lambda: args.soap and soap_service.start_soap_service())
+soap_thread = multiprocessing.Process(target=lambda: args.soap and soap_service.ProgrammersAccessSoapServer.start())
 rest_thread = multiprocessing.Process(target=lambda: args.rest and rest_server.run_rest_server())
 
 soap_thread.start()

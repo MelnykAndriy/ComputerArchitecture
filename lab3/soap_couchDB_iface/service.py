@@ -44,20 +44,28 @@ class ProgrammersAccessService(ServiceBase):
         return (Programmer(**programmer) for programmer in programmers)
 
 
-def start_soap_service(port=4242):
+class ProgrammersAccessSoapServer(object):
+    _server = None
 
-    application = Application(
-        [ProgrammersAccessService],
-        'programmers',
-        in_protocol=Soap11(validator='lxml'),
-        out_protocol=Soap11()
-    )
+    @classmethod
+    def start(cls, port=4242):
+        application = Application(
+            [ProgrammersAccessService],
+            'programmers',
+            in_protocol=Soap11(validator='lxml'),
+            out_protocol=Soap11()
+        )
 
-    wsgi_application = WsgiApplication(application)
+        wsgi_application = WsgiApplication(application)
 
-    logging.basicConfig(level=logging.DEBUG)
-    logging.getLogger('spyne.protocol.xml').setLevel(logging.DEBUG)
+        logging.basicConfig(level=logging.DEBUG)
+        logging.getLogger('spyne.protocol.xml').setLevel(logging.DEBUG)
 
+        cls._server = make_server('localhost', port, wsgi_application)
+        cls._server.serve_forever()
 
-    server = make_server('localhost', port, wsgi_application)
-    server.serve_forever()
+    @classmethod
+    def stop(cls):
+        if cls._server:
+            cls._server.shutdown()
+            cls._server.server_close()

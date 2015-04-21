@@ -11,11 +11,13 @@ import time
 class SoapIntegrationTest(unittest.TestCase):  # Alive database is required
 
     def setUp(self):
-        self._service_process = multiprocessing.Process(target=lambda: soap_couchDB_iface.service.start_soap_service())
+        self._service_process = multiprocessing.Process(
+            target=lambda: soap_couchDB_iface.service.ProgrammersAccessSoapServer.start()
+        )
         self._service_process.start()
-        self._programmer_dict_1 = dict(name='TestName1', surname='TestSurname1', languages=['Python' 'Lisp'], age=20,
+        self._programmer_dict_1 = dict(name='TestName1', surname='TestSurname1', languages=['Python', 'Lisp'], age=20,
                                        experience=2, skill='middle', english_level='intermediate')
-        self._programmer_dict_2 = dict(name='TestName2', surname='TestSurname2', languages=['Java' 'C#'],
+        self._programmer_dict_2 = dict(name='TestName2', surname='TestSurname2', languages=['Java', 'C#'],
                                        age=20, experience=0, skill='junior', english_level='beginner')
         time.sleep(1)
 
